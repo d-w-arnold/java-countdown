@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Numbers round in Countdown game.
@@ -24,23 +25,39 @@ public class Numbers
     // Selection of large numbers available in a special edition numbers round.
     private final int[] LARGE_NUMBER_SPECIAL = {12, 37, 62, 87}; // TODO: Extend to include special large numbers.
 
-    // The number available to make the target number.
-    private List<Integer> numbers;
+    // The numbers available to make the target number.
+    private List<Integer> choosenNumbers;
     // Target number in Numbers round.
     private int target;
+    // The last calculation recorded, used to generate the solution for a given target number.
+    private char lastCalc;
+    // The order of calculations in the solution to get too the target number.
+    private List<Character> solutionCals;
+    // The order of shuffled numbers in the solution to get too the target number.
+    private List<Integer> solutionNumsOrder;
+
 
     public Numbers(int largeQuantity, int smallQuantity)
     {
-        numbers = new ArrayList<>();
         chooseNumbers(largeQuantity, smallQuantity);
         generateTarget();
         printBoard();
     }
 
-    public void getSolution()
+    /**
+     * Print solution to get the target number to standard output.
+     */
+    public void printSolution()
     {
-        // TODO: Complete getSolution() method
-        System.out.println("Prints the solution as a pretty string");
+        String solution = target + " = ";
+        StringBuilder tmpValue = new StringBuilder("(" + solutionNumsOrder.get(0) + ")");
+        for (int i = 0; i < solutionCals.size(); i++) {
+            char tmpCalc = solutionCals.get(i);
+            int tmpNum = solutionNumsOrder.get(i + 1);
+            tmpValue = new StringBuilder("(" + tmpValue + " " + tmpCalc + " " + tmpNum + ")");
+        }
+        solution += tmpValue;
+        System.out.println("Solution:\n" + solution);
     }
 
     /**
@@ -51,6 +68,7 @@ public class Numbers
      */
     private void chooseNumbers(int largeQuantity, int smallQuantity)
     {
+        choosenNumbers = new ArrayList<>();
         // Randomly pick large number based on quantity specified by player.
         List<Integer> largeNumbers = new ArrayList<>();
         for (int ln : LARGE_NUMBERS) {
@@ -58,7 +76,7 @@ public class Numbers
         }
         Collections.shuffle(largeNumbers);
         for (int i = 0; i < largeQuantity; i++) {
-            numbers.add(largeNumbers.get(i));
+            choosenNumbers.add(largeNumbers.get(i));
         }
         // Randomly pick small number based on quantity specified by player.
         List<Integer> smallNumbers = new ArrayList<>();
@@ -69,7 +87,7 @@ public class Numbers
         }
         Collections.shuffle(smallNumbers);
         for (int i = 0; i < smallQuantity; i++) {
-            numbers.add(smallNumbers.get(i));
+            choosenNumbers.add(smallNumbers.get(i));
         }
     }
 
@@ -78,19 +96,122 @@ public class Numbers
      */
     private void generateTarget()
     {
-        // TODO: Complete generateTarget() method
-        target = 0;
+        List<Integer> tmpNumbers = new ArrayList<>(choosenNumbers);
+        while (true) {
+            Collections.shuffle(tmpNumbers);
+            int tmpTargetNumber = getTargetNumber(tmpNumbers);
+            if (validTargetNumber(tmpTargetNumber)) {
+                target = tmpTargetNumber;
+                break;
+            }
+        }
     }
 
+    /**
+     * Generate a target number for a given assortment of shuffled choosen numbers.
+     *
+     * @param tmpNumbers The shuffled choosen numbers.
+     * @return The generated target number.
+     */
+    private int getTargetNumber(List<Integer> tmpNumbers)
+    {
+        solutionCals = new ArrayList<>();
+        int total = tmpNumbers.get(0);
+        for (int i = 1; i < randomNumCalcs(tmpNumbers.size(), tmpNumbers.size() / 2); i++) {
+            int tmpNumber = tmpNumbers.get(i);
+            total = randomCalc(total, tmpNumber);
+            if (total < 0) {
+                return -1; // Illegal running total, negative value.
+            } else {
+                solutionCals.add(lastCalc);
+            }
+        }
+        solutionNumsOrder = new ArrayList<>(tmpNumbers);
+        return total;
+    }
+
+    /**
+     * Generate a random number of calculations a player would need to conduct to a valid solution for a target number.
+     *
+     * @param n The number of choosen numbers.
+     * @param b The bounds for generating a number.
+     * @return The random number of calculations to use to get to the target number.
+     */
+    private int randomNumCalcs(int n, int b)
+    {
+        return n - new Random().nextInt(b);
+    }
+
+    /**
+     * Conduct a random valid calculation.
+     *
+     * @param x First number in calculation.
+     * @param y Second number in calculation.
+     * @return Answer of calculation.
+     */
+    private int randomCalc(int x, int y)
+    {
+        int ans = 0;
+        int n;
+        if (y == 1) {
+            n = 3; // Avoids division by 1.
+        } else {
+            n = 4;
+        }
+        switch (new Random().nextInt(n)) {
+            case 0: // (+)
+                lastCalc = '+';
+                ans = x + y;
+                break;
+            case 1: // (-)
+                lastCalc = '-';
+                ans = x - y;
+                break;
+            case 2: // (*)
+                lastCalc = '*';
+                ans = x * y;
+                break;
+            case 3: // (/)
+                lastCalc = '/';
+                if (x % y == 0) {
+                    ans = x / y;
+                } else {
+                    ans = -1; // Illegal division, has a remainder.
+                }
+                break;
+        }
+        return ans;
+    }
+
+    /**
+     * Validate whether a potential target number is 3-digits.
+     *
+     * @param potentialTargetNumber The potential target number.
+     * @return True if a 3-digit number.
+     */
+    private boolean validTargetNumber(int potentialTargetNumber)
+    {
+        return 100 <= potentialTargetNumber && potentialTargetNumber < 1000;
+    }
+
+    /**
+     * Print the numbers board to standard output.
+     */
     private void printBoard()
     {
         System.out.println("\n---------------- NUMBERS BOARD ----------------\n");
         System.out.println("Target:\t\t[ " + target + " ]");
-        System.out.println("Numbers:\t[ " + convertToString(new ArrayList<>(numbers)) + " ]");
+        System.out.println("Numbers:\t[ " + convertToString(new ArrayList<>(choosenNumbers)) + " ]");
         System.out.println("\n-----------------------------------------------\n");
     }
 
-    private String convertToString(ArrayList<Integer> numbers)
+    /**
+     * Convert a list of ints to a string.
+     *
+     * @param numbers The list of ints.
+     * @return The list of ints as a string.
+     */
+    private String convertToString(List<Integer> numbers)
     {
         StringBuilder builder = new StringBuilder();
         // Append all Integers in StringBuilder to the StringBuilder.
