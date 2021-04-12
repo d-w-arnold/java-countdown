@@ -41,7 +41,6 @@ public class Numbers
     {
         chooseNumbers(largeQuantity, smallQuantity);
         generateTarget();
-        printBoard();
     }
 
     /**
@@ -105,6 +104,7 @@ public class Numbers
                 break;
             }
         }
+        printBoard();
     }
 
     /**
@@ -200,8 +200,8 @@ public class Numbers
     private void printBoard()
     {
         System.out.println("\n---------------- NUMBERS BOARD ----------------\n");
-        System.out.println("Target:\t\t[ " + target + " ]");
-        System.out.println("Numbers:\t[ " + convertToString(new ArrayList<>(choosenNumbers)) + " ]");
+        System.out.println("Target:\t\t[" + target + "]");
+        System.out.println("Numbers:\t[" + convertToString(new ArrayList<>(choosenNumbers)) + "]");
         System.out.println("\n-----------------------------------------------\n");
     }
 

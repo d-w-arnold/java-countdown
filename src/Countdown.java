@@ -14,6 +14,9 @@ public class Countdown
     private final String LETTERS_NUMBERS_INPUT = "y";
     private final String LETTERS_INPUT = "l";
     private final String NUMBERS_INPUT = "n";
+    private final int TOTAL_NUMBERS = 6;
+    private final int TOTAL_LETTERS = 9;
+
     private Scanner scanner;
 
     public Countdown() throws InterruptedException
@@ -29,7 +32,7 @@ public class Countdown
         while (true) {
             System.out.println("\nWould you like to play Letters and Numbers (" + LETTERS_NUMBERS_INPUT +
                     "), just Letters (" + LETTERS_INPUT + "), or just Numbers (" + NUMBERS_INPUT + ")?" +
-                    "\nPlease type response:\n");
+                    "\n(e.g. Type '" + LETTERS_INPUT + "' and ENTER for just Letters)\n");
             switch (scanner.next()) {
                 case LETTERS_NUMBERS_INPUT:
                     lettersAndNumbers();
@@ -69,7 +72,6 @@ public class Countdown
     private void numbersRound() throws InterruptedException
     {
         // A single numbers rounds.
-        final int TOTAL_NUMBERS = 6;
         System.out.println("\nStarting Numbers round...\n");
         System.out.println("\nHow many large numbers would you like (between 1-4)?\n");
         int ln = scanner.nextInt();
@@ -81,11 +83,16 @@ public class Countdown
         }
     }
 
-    private void lettersRound()
+    private void lettersRound() throws InterruptedException
     {
         // A single letters rounds.
         System.out.println("\nStarting Letters round...\n");
-        Letters lettersRound = new Letters();
+        Letters lettersRound = new Letters(TOTAL_LETTERS);
+        countdownClock();
+        System.out.println("\nWould you like to see a list of possible words (y/n)?\n");
+        if (scanner.next().equals("y")) {
+            lettersRound.printPossibleWords();
+        }
     }
 
     private void lettersAndNumbers() throws InterruptedException
@@ -136,7 +143,7 @@ public class Countdown
         endGame();
     }
 
-    private void justLetters()
+    private void justLetters() throws InterruptedException
     {
         // Just letters rounds.
         do {
