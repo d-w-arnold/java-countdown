@@ -57,7 +57,7 @@ public class Numbers
             tmpValue = new StringBuilder("(" + tmpValue + " " + tmpCalc + " " + tmpNum + ")");
         }
         solution += tmpValue;
-        System.out.println("Solution:\n" + solution);
+        System.out.println("\nSolution:\n" + solution + "");
     }
 
     /**

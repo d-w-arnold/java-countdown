@@ -1,9 +1,8 @@
 public class Main
 {
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws InterruptedException
     {
-        Numbers numbersRound = new Numbers(2, 4);
-        numbersRound.printSolution();
+        Countdown countdownGame = new Countdown();
     }
 }
