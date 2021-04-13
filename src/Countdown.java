@@ -94,8 +94,8 @@ public class Countdown
     {
         outOfWhile:
         while (true) {
-            System.out.println("\nWould you like to play Letters (" + LETTERS_INPUT + ") or Numbers (" + NUMBERS_INPUT + ") first?" +
-                    "\nPlease type abbreviated response:\n");
+            System.out.println("\nWould you like to play Letters (" + LETTERS_INPUT +
+                    ") or Numbers (" + NUMBERS_INPUT + ") first?\n");
             switch (scanner.next()) {
                 case LETTERS_INPUT:
                     lettersThenNumbers();
