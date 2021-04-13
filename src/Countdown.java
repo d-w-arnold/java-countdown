@@ -89,10 +89,6 @@ public class Countdown
         System.out.println("\nStarting Letters round...\n");
         Letters lettersRound = new Letters(TOTAL_LETTERS);
         countdownClock();
-        System.out.println("\nWould you like to see a list of possible words (y/n)?\n");
-        if (scanner.next().equals("y")) {
-            lettersRound.printPossibleWords();
-        }
     }
 
     private void lettersAndNumbers() throws InterruptedException

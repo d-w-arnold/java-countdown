@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,8 +16,8 @@ public class Letters
     private final String VOWEL_INPUT = "v";
     private final String CONSONANT_INPUT = "c";
 
-    // The random choosen letters available.
-    private List<Character> choosenLetters;
+    // The random letters available.
+    private String letters;
     private Scanner scanner;
 
     public Letters(int numOfLetters)
@@ -28,20 +27,11 @@ public class Letters
     }
 
     /**
-     * Print a list of possible words.
-     */
-    public void printPossibleWords()
-    {
-        // TODO: Implement list of possible words, for group of random letters.
-        System.out.println("\nPossible words, coming soon...\n");
-    }
-
-    /**
      * Choose the letters for the letters round.
      */
     private void chooseLetters()
     {
-        choosenLetters = new ArrayList<>();
+        letters = "";
         scanner = new Scanner(System.in);
         for (int i = 0; i < TOTAL_LETTERS; i++) {
             outOfWhile:
@@ -50,11 +40,11 @@ public class Letters
                         " letters left) Would you like a Vowel (v) or Consonant (c)?\n");
                 switch (scanner.next()) {
                     case VOWEL_INPUT:
-                        choosenLetters.add(randomVowel());
+                        letters += randomVowel();
                         printBoard();
                         break outOfWhile;
                     case CONSONANT_INPUT:
-                        choosenLetters.add(randomConsonant());
+                        letters += randomConsonant();
                         printBoard();
                         break outOfWhile;
                     default:
@@ -84,7 +74,7 @@ public class Letters
     private void printBoard()
     {
         System.out.println("\n---------------- LETTERS BOARD ----------------\n");
-        System.out.println("Letters:\t" + choosenLetters);
+        System.out.println("Letters:\t" + Arrays.toString(letters.toCharArray()));
         System.out.println("\n-----------------------------------------------\n");
     }
 }
