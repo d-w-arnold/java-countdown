@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Numbers round in Countdown game.
@@ -16,14 +13,15 @@ import java.util.Random;
  */
 public class Numbers
 {
-    // Smallest small number in range of small numbers.
-    private final int SMALL_NUMBER_MIN = 1;
-    // Largest small number in range of small numbers.
-    private final int SMALL_NUMBER_MAX = 10;
+    private final int TOTAL_NUMBERS = 6;
     // Selection of large numbers available in a numbers round.
     private final int[] LARGE_NUMBERS = {25, 50, 75, 100};
     // Selection of large numbers available in a special edition numbers round.
     private final int[] LARGE_NUMBER_SPECIAL = {12, 37, 62, 87}; // TODO: Extend to include special large numbers.
+    // Smallest small number in range of small numbers.
+    private final int SMALL_NUMBER_MIN = 1;
+    // Largest small number in range of small numbers.
+    private final int SMALL_NUMBER_MAX = 10;
 
     // The numbers available to make the target number.
     private List<Integer> choosenNumbers;
@@ -35,12 +33,15 @@ public class Numbers
     private List<Character> solutionCals;
     // The order of shuffled numbers in the solution to get too the target number.
     private List<Integer> solutionNumsOrder;
+    // The quantity of large numbers to be used in numbers round.
+    private int largeQuantity;
+    // The quantity of small numbers to be used in numbers round.
+    private int smallQuantity;
 
 
-    public Numbers(int largeQuantity, int smallQuantity)
+    public Numbers()
     {
-        chooseNumbers(largeQuantity, smallQuantity);
-        generateTarget();
+        chooseNumbers();
     }
 
     /**
@@ -61,13 +62,11 @@ public class Numbers
 
     /**
      * Choose the numbers for the numbers round.
-     *
-     * @param largeQuantity Number of large numbers to use in Numbers round.
-     * @param smallQuantity Number of small numbers to use in Numbers round.
      */
-    private void chooseNumbers(int largeQuantity, int smallQuantity)
+    private void chooseNumbers()
     {
         choosenNumbers = new ArrayList<>();
+        getLargeSmallQuantities();
         // Randomly pick large number based on quantity specified by player.
         List<Integer> largeNumbers = new ArrayList<>();
         for (int ln : LARGE_NUMBERS) {
@@ -88,6 +87,41 @@ public class Numbers
         for (int i = 0; i < smallQuantity; i++) {
             choosenNumbers.add(smallNumbers.get(i));
         }
+        generateTarget();
+    }
+
+    /**
+     * Get the quantities for large and small numbers.
+     */
+    private void getLargeSmallQuantities()
+    {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            int n;
+            System.out.println("\nHow many large numbers would you like (" + LARGE_NUMBERS.length + " or less)?\n");
+            try {
+                n = scanner.nextInt();
+            } catch (Exception e) {
+                invalidNumberMsg();
+                scanner.nextLine(); // Clears the buffer
+                continue;
+            }
+            if (0 <= n && n <= LARGE_NUMBERS.length) {
+                largeQuantity = n;
+                smallQuantity = TOTAL_NUMBERS - n;
+                break;
+            } else {
+                invalidNumberMsg();
+            }
+        }
+    }
+
+    /**
+     * Print a message informing of an invalid number input.
+     */
+    private void invalidNumberMsg()
+    {
+        System.out.println("\nPlease provide a valid number of large numbers: (" + LARGE_NUMBERS.length + " or less)\n");
     }
 
     /**
@@ -199,10 +233,10 @@ public class Numbers
      */
     private void printBoard()
     {
-        System.out.println("\n---------------- NUMBERS BOARD ----------------\n");
+        System.out.println("\n================ NUMBERS BOARD ================\n");
         System.out.println("Target:\t\t[" + target + "]");
         System.out.println("Numbers:\t[" + convertToString(new ArrayList<>(choosenNumbers)) + "]");
-        System.out.println("\n-----------------------------------------------\n");
+        System.out.println("\n===============================================\n");
     }
 
     /**

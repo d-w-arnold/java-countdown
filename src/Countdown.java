@@ -11,13 +11,14 @@ import java.util.concurrent.TimeUnit;
 public class Countdown
 {
     private final int COUNTDOWN_TIMER = 30; // 30 seconds clock
+    // The selector for choosing to play both letters and numbers rounds.
     private final String LETTERS_NUMBERS_INPUT = "y";
+    // The selector for choosing to play letters rounds only.
     private final String LETTERS_INPUT = "l";
+    // The selector for choosing to play numbers rounds only.
     private final String NUMBERS_INPUT = "n";
-    private final int TOTAL_NUMBERS = 6;
-    private final int TOTAL_LETTERS = 9;
-
-    private Scanner scanner;
+    // Read from standard input.
+    private final Scanner scanner;
 
     public Countdown() throws InterruptedException
     {
@@ -27,7 +28,7 @@ public class Countdown
 
     private void startGame() throws InterruptedException
     {
-        System.out.println("\n------------------ COUNTDOWN ------------------\n");
+        System.out.println("\n================== COUNTDOWN ==================\n");
         outOfWhile:
         while (true) {
             System.out.println("\nWould you like to play Letters and Numbers (" + LETTERS_NUMBERS_INPUT +
@@ -45,8 +46,8 @@ public class Countdown
                     break outOfWhile;
                 default:
                     System.out.println("\nPlease provide one of the valid inputs: (" +
-                            LETTERS_NUMBERS_INPUT + "," +
-                            LETTERS_INPUT + "," +
+                            LETTERS_NUMBERS_INPUT + ", " +
+                            LETTERS_INPUT + ", " +
                             NUMBERS_INPUT + ")\n");
             }
         }
@@ -72,10 +73,8 @@ public class Countdown
     private void numbersRound() throws InterruptedException
     {
         // A single numbers rounds.
-        System.out.println("\nStarting Numbers round...\n");
-        System.out.println("\nHow many large numbers would you like (between 1-4)?\n");
-        int ln = scanner.nextInt();
-        Numbers numbersRound = new Numbers(ln, TOTAL_NUMBERS - ln);
+        System.out.println("\n===== Numbers Round =====\n");
+        Numbers numbersRound = new Numbers();
         countdownClock();
         System.out.println("\nWould you like to see a possible solution to the numbers round target (y/n)?\n");
         if (scanner.next().equals("y")) {
@@ -86,8 +85,8 @@ public class Countdown
     private void lettersRound() throws InterruptedException
     {
         // A single letters rounds.
-        System.out.println("\nStarting Letters round...\n");
-        Letters lettersRound = new Letters(TOTAL_LETTERS);
+        System.out.println("\n===== Letters Round =====\n");
+        new Letters();
         countdownClock();
     }
 
@@ -106,7 +105,7 @@ public class Countdown
                     break outOfWhile;
                 default:
                     System.out.println("\nPlease provide one of the valid inputs: (" +
-                            LETTERS_INPUT + "," +
+                            LETTERS_INPUT + ", " +
                             NUMBERS_INPUT + ")\n");
             }
         }
@@ -158,6 +157,6 @@ public class Countdown
     private void endGame()
     {
         System.out.println("\nThank you for playing Countdown!\n");
-        System.out.println("\n-----------------------------------------------\n");
+        System.out.println("\n===============================================\n");
     }
 }

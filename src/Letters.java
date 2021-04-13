@@ -10,19 +10,20 @@ import java.util.Scanner;
  */
 public class Letters
 {
-    private final int TOTAL_LETTERS;
+    private final int TOTAL_LETTERS = 9;
+    // Selection of vowels available in a letters round.
     private final String VOWELS = "AEIOU";
+    // Selection of consonants available in a letters round.
     private final String CONSONANTS = "BCDFGHJKLMNPQRSTVWXYZ";
+    // The selector for choosing a random vowel.
     private final String VOWEL_INPUT = "v";
+    // The selector for choosing a random consonant.
     private final String CONSONANT_INPUT = "c";
-
     // The random letters available.
     private String letters;
-    private Scanner scanner;
 
-    public Letters(int numOfLetters)
+    public Letters()
     {
-        this.TOTAL_LETTERS = numOfLetters;
         chooseLetters();
     }
 
@@ -32,12 +33,13 @@ public class Letters
     private void chooseLetters()
     {
         letters = "";
-        scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < TOTAL_LETTERS; i++) {
             outOfWhile:
             while (true) {
                 System.out.println("\n(" + (TOTAL_LETTERS - i) +
-                        " letters left) Would you like a Vowel (v) or Consonant (c)?\n");
+                        " letters left) Would you like a Vowel (" + VOWEL_INPUT +
+                        ") or Consonant (" + CONSONANT_INPUT + ")?\n");
                 switch (scanner.next()) {
                     case VOWEL_INPUT:
                         letters += randomVowel();
@@ -49,22 +51,30 @@ public class Letters
                         break outOfWhile;
                     default:
                         System.out.println("\nPlease provide one of the valid inputs: (" +
-                                VOWEL_INPUT + "," +
+                                VOWEL_INPUT + ", " +
                                 CONSONANT_INPUT + ")\n");
                 }
             }
         }
     }
 
+    /**
+     * Generate a random vowel character.
+     *
+     * @return A random vowel.
+     */
     private Character randomVowel()
     {
-        // Generate random Vowel.
         return VOWELS.charAt(new Random().nextInt(VOWELS.length()));
     }
 
+    /**
+     * Generate a random consonant character.
+     *
+     * @return A random consonant.
+     */
     private Character randomConsonant()
     {
-        // Generate random Consonant.
         return CONSONANTS.charAt(new Random().nextInt(CONSONANTS.length()));
     }
 
@@ -73,8 +83,8 @@ public class Letters
      */
     private void printBoard()
     {
-        System.out.println("\n---------------- LETTERS BOARD ----------------\n");
+        System.out.println("\n================ LETTERS BOARD ================\n");
         System.out.println("Letters:\t" + Arrays.toString(letters.toCharArray()));
-        System.out.println("\n-----------------------------------------------\n");
+        System.out.println("\n===============================================\n");
     }
 }
